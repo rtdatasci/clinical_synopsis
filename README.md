@@ -13,8 +13,8 @@ A Streamlit application that automates the creation of clinical study synopses b
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/rtdatasci/test_antigravity.git
-    cd test_antigravity
+    git clone https://github.com/rtdatasci/clinical_synopsis.git
+    cd clinical_synopsis
     ```
 
 2.  Install dependencies:

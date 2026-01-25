@@ -67,17 +67,29 @@ def main():
                     st.subheader("Copy Synopsis Markdown")
                     st.code(synopsis_text, language="markdown")
                     
-                    # Log to Supabase
+                    # Log to Supabase (Deduplication)
                     if supabase:
                         try:
+                            # Check if this query already exists (case-insensitive)
+                            existing = supabase.table("searches").select("id").ilike("query", query).execute()
+                            
                             data = {
                                 "query": query,
                                 "top_study_id": first_study_id,
                                 "synopsis_text": synopsis_text,
-                                "num_studies_found": len(studies)
+                                "num_studies_found": len(studies),
+                                "created_at": "now()" # Refresh timestamp on update
                             }
-                            supabase.table("searches").insert(data).execute()
-                            st.toast("Search saved to history!", icon="💾")
+                            
+                            if existing.data:
+                                # Update existing record
+                                record_id = existing.data[0]['id']
+                                supabase.table("searches").update(data).eq("id", record_id).execute()
+                                st.toast("Search history updated!", icon="🔄")
+                            else:
+                                # Insert new record
+                                supabase.table("searches").insert(data).execute()
+                                st.toast("Search saved to history!", icon="💾")
                         except Exception as e:
                             st.error(f"Failed to save to database: {e}")
                 else:

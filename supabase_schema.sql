@@ -8,5 +8,5 @@ create table searches (
   num_studies_found int
 );
 
--- Enable Row Level Security (RLS) if you want to restrict access (optional for this demo)
--- alter table searches enable row level security;
+-- Optional: Add a unique constraint to the query column to prevent duplicates at the DB level
+-- alter table searches add constraint unique_query unique (query);
